@@ -1,7 +1,10 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '/screens/login_screen.dart';
 import '../widgets/text_field_input.dart';
 import '../utils/colors.dart';
+import '../resources/auth_methods.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class _SignupState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -25,9 +29,18 @@ class _SignupState extends State<SignupScreen> {
     _usernameController.dispose();
   }
 
+  selectImage() {
+    //Uint8List im = await pickImage(ImageSource.gallery);
+    // set state because we need to display the image we selected on the circle avatar
+    setState(() {
+      //_image = im;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -35,88 +48,126 @@ class _SignupState extends State<SignupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Flexible(child: Container(), flex: 2),
-              SvgPicture.asset('assets/ic_instagram.svg',
-                  color: primaryColor, height: 64),
-              const SizedBox(height: 64),
+              Flexible(
+                child: Container(),
+                flex: 2,
+              ),
+              SvgPicture.asset(
+                'assets/ic_instagram.svg',
+                color: primaryColor,
+                height: 64,
+              ),
+              const SizedBox(
+                height: 64,
+              ),
               Stack(
                 children: [
                   const CircleAvatar(
                     radius: 64,
-                    backgroundImage: NetworkImage(
-                    'assets/default_avator.webp',
-                  ),
+                    backgroundImage: NetworkImage('assets/default_avator.webp'),
                   ),
                   Positioned(
-                    bottom: -10,
+                    bottom: -2,
                     left: 80,
-                    child: IconButton(onPressed: (){
-
-                  },
-                  icon: const Icon(
-                    Icons.add_a_photo,
-                  ),),),
-                ],
-              ),
-              const SizedBox(height: 64),
-              TextFieldInput(
-                textEditingController: _usernameController,
-                hintText: "Enter Username",
-                textInputType: TextInputType.text,
-              ),
-              SizedBox(height: 24),
-              TextFieldInput(
-                textEditingController: _emailController,
-                hintText: "Enter Email",
-                textInputType: TextInputType.emailAddress,
-              ),
-              SizedBox(height: 24),
-              TextFieldInput(
-                textEditingController: _passwordController,
-                hintText: "Enter Password",
-                textInputType: TextInputType.text,
-                isPass: true,
-              ),
-              SizedBox(height: 24),
-              TextFieldInput(
-                textEditingController: _bioController,
-                hintText: "Enter a Bio",
-                textInputType: TextInputType.text,
-              ),
-              SizedBox(height: 24),
-              Container(
-                child: const Text("Sign up"),
-                width: double.infinity,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                ),
-                decoration: const ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(4),
+                    child: IconButton(
+                      onPressed: selectImage,
+                      icon: const Icon(Icons.add_a_photo),
                     ),
                   ),
-                  color: blueColor,
+                ],
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
+                hintText: 'Enter your username',
+                textInputType: TextInputType.text,
+                textEditingController: _usernameController,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
+                hintText: 'Enter your email',
+                textInputType: TextInputType.emailAddress,
+                textEditingController: _emailController,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
+                hintText: 'Enter your password',
+                textInputType: TextInputType.text,
+                textEditingController: _passwordController,
+                isPass: true,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              TextFieldInput(
+                hintText: 'Enter your bio',
+                textInputType: TextInputType.text,
+                textEditingController: _bioController,
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              InkWell(
+                onTap: () async {
+                  String res = await AuthMethods().signUpUser(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    username: _usernameController.text,
+                    bio: _passwordController.text,
+                  );
+                  print(res);
+                },
+                child: Container(
+                  child: Text(
+                    'Sign up',
+                  ),
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: const ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+                    color: blueColor,
+                  ),
                 ),
               ),
-              SizedBox(height: 12),
-              Flexible(child: Container(), flex: 2),
+              const SizedBox(
+                height: 12,
+              ),
+              Flexible(
+                child: Container(),
+                flex: 2,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
                     child: const Text(
-                      "Already have an account?",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'Already have an account?',
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                   ),
-                  Container(
-                    child: const Text("Log in"),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    ),
+                    child: Container(
+                      child: const Text(
+                        ' Login.',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
                   ),
                 ],
               ),
