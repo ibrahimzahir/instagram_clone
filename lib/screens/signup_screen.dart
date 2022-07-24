@@ -35,7 +35,7 @@ class _SignupState extends State<SignupScreen> {
     Uint8List im = await pickImage(ImageSource.gallery);
     // set state because we need to display the image we selected on the circle avatar
     setState(() {
-      //_image = im;
+      _image = im;
     });
   }
 
@@ -64,10 +64,16 @@ class _SignupState extends State<SignupScreen> {
               ),
               Stack(
                 children: [
-                  const CircleAvatar(
-                    radius: 64,
-                    backgroundImage: NetworkImage('assets/default_avator.webp'),
-                  ),
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 64,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : const CircleAvatar(
+                          radius: 64,
+                          backgroundImage:
+                              NetworkImage('assets/default_avator.webp'),
+                        ),
                   Positioned(
                     bottom: -2,
                     left: 80,
