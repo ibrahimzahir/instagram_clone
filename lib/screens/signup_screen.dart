@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../utils/utils.dart';
 import '/screens/login_screen.dart';
 import '../widgets/text_field_input.dart';
 import '../utils/colors.dart';
@@ -29,8 +31,8 @@ class _SignupState extends State<SignupScreen> {
     _usernameController.dispose();
   }
 
-  selectImage() {
-    //Uint8List im = await pickImage(ImageSource.gallery);
+  void selectImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
     // set state because we need to display the image we selected on the circle avatar
     setState(() {
       //_image = im;
@@ -120,7 +122,6 @@ class _SignupState extends State<SignupScreen> {
                     username: _usernameController.text,
                     bio: _passwordController.text,
                   );
-                  print(res);
                 },
                 child: Container(
                   child: Text(
