@@ -87,11 +87,13 @@ class _SignupState extends State<SignupScreen> {
                       ? CircleAvatar(
                           radius: 64,
                           backgroundImage: MemoryImage(_image!),
+                          backgroundColor: Colors.red,
                         )
                       : const CircleAvatar(
                           radius: 64,
                           backgroundImage:
                               NetworkImage('assets/default_avator.webp'),
+                          backgroundColor: Colors.red,
                         ),
                   Positioned(
                     bottom: -2,
